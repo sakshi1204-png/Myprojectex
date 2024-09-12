@@ -28,7 +28,7 @@ function App() {
       case 3:
         return <Income />
       case 4: 
-        return <Expenses />
+        return <ExpenseForm />
       default: 
         return <Dashboard />
     }

@@ -3,39 +3,76 @@ import styled from 'styled-components'
 import { useGlobalContext } from '../../context/globalContext';
 import { InnerLayout } from '../../styles/Layouts';
 import Form from '../Form/Form';
-import IncomeItem from '../IncomeItem/IncomeItem';
+import { Box } from '@mui/material';
+import Button from '../Button/Button';
+import { trash, settings } from '../../utils/Icons'; // Adjust imports as needed
 
 function Income() {
-    const {addIncome,incomes, getIncomes, deleteIncome, totalIncome} = useGlobalContext()
+    const { addIncome, incomes, getIncomes, deleteIncome, totalIncome } = useGlobalContext()
 
-    useEffect(() =>{
+    useEffect(() => {
         getIncomes()
     }, [])
+
+    const handleDelete = async (id) => {
+        await deleteIncome(id);
+        await getIncomes();
+    };
+
     return (
         <IncomeStyled>
             <InnerLayout>
-                <h1> Add Income</h1>
+                <h1>Add Income</h1>
                 <h2 className="total-income">Total Income: <span>${totalIncome()}</span></h2>
                 <div className="income-content">
                     <div className="form-container">
                         <Form />
                     </div>
-                    <div className="incomes">
-                        {incomes.map((income) => {
-                            const {_id, title, amount, date, category, description, type} = income;
-                            return <IncomeItem
-                                key={_id}
-                                id={_id} 
-                                title={title} 
-                                description={description} 
-                                amount={amount} 
-                                date={date} 
-                                type={type}
-                                category={category} 
-                                indicatorColor="var(--color-green)"
-                                deleteItem={deleteIncome}
-                            />
-                        })}
+                    <div className="history-container">
+                        <h3>Recent Incomes</h3>
+                        <TableContainer>
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Title</th>
+                                        <th>Amount</th>
+                                        <th>Date</th>
+                                        <th>Category</th>
+                                        <th>Description</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {incomes.length > 0 ? (
+                                        incomes.map((income) => (
+                                            <tr key={income._id}>
+                                                <td>{income.title}</td>
+                                                <td>${income.amount}</td>
+                                                <td>{new Date(income.date).toLocaleDateString()}</td>
+                                                <td>{income.category}</td>
+                                                <td>{income.description}</td>
+                                                <td>
+                                                    <Button
+                                                        name='Edit'
+                                                        icon={settings}
+                                                        onClick={() => {}}
+                                                    />
+                                                    <Button
+                                                        name='Delete'
+                                                        icon={trash}
+                                                        onClick={() => handleDelete(income._id)}
+                                                    />
+                                                </td>
+                                            </tr>
+                                        ))
+                                    ) : (
+                                        <tr>
+                                            <td colSpan="6">No incomes found</td>
+                                        </tr>
+                                    )}
+                                </tbody>
+                            </table>
+                        </TableContainer>
                     </div>
                 </div>
             </InnerLayout>
@@ -46,74 +83,114 @@ function Income() {
 const IncomeStyled = styled.div`
     display: flex;
     flex-direction: column;
-    padding: -1rem 4rem;
-    background-color: #f8f9fa;
+    padding: 2rem;
+    background-color: #f5f6f7;
     min-height: 100vh;
-    
+
     h1 {
         text-align: center;
         font-size: 2.5rem;
-        color: #2c3e50;
-        margin-bottom: 0rem;
+        color: #34495e;
+        margin-bottom: 1rem;
         font-weight: 600;
-        padding-top= 2px;
-        letter-spacing: 1.5px;
     }
 
-    .total-income{
+    .total-income {
         display: flex;
         justify-content: center;
         align-items: center;
         background: #ffffff;
-        border: 1px solid #e0e0e0;
-        box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.05);
-        border-radius: 12px;
-        padding: 1rem ;
-        margin: 1rem 0rem;
-        font-size: 2.1rem;
+        border: 1px solid #d0d0d0;
+        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+        border-radius: 10px;
+        padding: 1rem;
+        margin: 1rem 0;
+        font-size: 1.8rem;
         gap: 1rem;
-        span{
-            font-size: 3rem;
-            font-weight: 800;
-            color: #27ae60;
+
+        span {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2ecc71;
         }
     }
 
-    .income-content{
+    .income-content {
         display: flex;
+        gap: 1.5rem;
         flex-direction: row;
-        gap: 1rem;
-        .form-container{
+
+        .form-container {
             flex: 0.5;
             background: #ffffff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e0e0e0;
-                        max-height: 65vh;
-
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d0d0d0;
+            max-height: 70vh;
         }
-        .incomes{
+
+        .history-container {
             flex: 1;
             background: #ffffff;
-            padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0px 8px 30px rgba(0, 0, 0, 0.05);
-            border: 1px solid #e0e0e0;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d0d0d0;
             overflow-y: auto;
-            max-height: 100vh;
+            max-height: 70vh;
 
-            &::-webkit-scrollbar {
-                width: 10px;
-            }
-
-            &::-webkit-scrollbar-thumb {
-                background-color: #27ae60;
-                border-radius: 4px;
+            h3 {
+                margin-bottom: 1rem;
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #333;
             }
         }
     }
 `;
 
+const TableContainer = styled.div`
+    overflow-y: auto;
+    max-height: 60vh;
 
-export default Income
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    thead {
+        background: #f4f4f4;
+        color: #333;
+        font-weight: bold;
+    }
+
+    th, td {
+        padding: 1rem;
+        border: 1px solid #ddd;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    th {
+        background: #e0e0e0;
+        color: #333;
+    }
+
+    td {
+        text-align: center;
+    }
+
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
+
+    tr:hover {
+        background: #f1f1f1;
+    }
+`;
+
+export default Income;
