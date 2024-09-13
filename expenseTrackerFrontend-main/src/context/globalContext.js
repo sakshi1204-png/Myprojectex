@@ -16,7 +16,7 @@ export const GlobalProvider = ({ children }) => {
             await axios.post(`${BASE_URL}add-income`, income);
             await getIncomes(); // Refresh incomes after adding
         } catch (err) {
-            setError(err.response.data.message);
+            setError(err.response?.data?.message || "An error occurred");
         }
     };
 
@@ -26,7 +26,7 @@ export const GlobalProvider = ({ children }) => {
             const response = await axios.get(`${BASE_URL}get-incomes`);
             setIncomes(response.data);
         } catch (err) {
-            setError(err.response.data.message);
+            setError(err.response?.data?.message || "An error occurred");
         }
     };
 
@@ -36,7 +36,7 @@ export const GlobalProvider = ({ children }) => {
             await axios.delete(`${BASE_URL}delete-income/${id}`);
             await getIncomes(); // Refresh incomes after deleting
         } catch (err) {
-            setError(err.response.data.message);
+            setError(err.response?.data?.message || "An error occurred");
         }
     };
 
@@ -46,7 +46,7 @@ export const GlobalProvider = ({ children }) => {
             await axios.post(`${BASE_URL}add-expense`, expense);
             await getExpenses(); // Refresh expenses after adding
         } catch (err) {
-            setError(err.response.data.message);
+            setError(err.response?.data?.message || "An error occurred");
         }
     };
 
@@ -56,7 +56,7 @@ export const GlobalProvider = ({ children }) => {
             await axios.put(`${BASE_URL}update-expense/${id}`, updatedExpense);
             await getExpenses(); // Refresh expenses after updating
         } catch (err) {
-            setError(err.response.data.message);
+            setError(err.response?.data?.message || "An error occurred");
         }
     };
 
@@ -66,7 +66,7 @@ export const GlobalProvider = ({ children }) => {
             const response = await axios.get(`${BASE_URL}get-expenses`);
             setExpenses(response.data);
         } catch (err) {
-            setError(err.response.data.message);
+            setError(err.response?.data?.message || "An error occurred");
         }
     };
 
@@ -76,32 +76,18 @@ export const GlobalProvider = ({ children }) => {
             await axios.delete(`${BASE_URL}delete-expense/${id}`);
             await getExpenses(); // Refresh expenses after deleting
         } catch (err) {
-            setError(err.response.data.message);
+            setError(err.response?.data?.message || "An error occurred");
         }
     };
 
     // Calculate total income
-    const totalIncome = () => {
-        let total = 0;
-        incomes.forEach((income) => {
-            total += income.amount;
-        });
-        return total;
-    };
+    const totalIncome = () => incomes.reduce((total, income) => total + income.amount, 0);
 
     // Calculate total expenses
-    const totalExpenses = () => {
-        let total = 0;
-        expenses.forEach((expense) => {
-            total += expense.amount;
-        });
-        return total;
-    };
+    const totalExpenses = () => expenses.reduce((total, expense) => total + expense.amount, 0);
 
     // Calculate total balance
-    const totalBalance = () => {
-        return totalIncome() - totalExpenses();
-    };
+    const totalBalance = () => totalIncome() - totalExpenses();
 
     // Get transaction history
     const transactionHistory = () => {
@@ -117,7 +103,7 @@ export const GlobalProvider = ({ children }) => {
             incomes,
             deleteIncome,
             addExpense,
-            updateExpense, // Ensure this is included
+            updateExpense,
             getExpenses,
             deleteExpense,
             expenses,
@@ -133,6 +119,4 @@ export const GlobalProvider = ({ children }) => {
     );
 };
 
-export const useGlobalContext = () => {
-    return useContext(GlobalContext);
-};
+export const useGlobalContext = () => useContext(GlobalContext);

@@ -76,7 +76,7 @@ function Form() {
            <div className="input-control">
                 <DatePicker 
                     id="date"
-                    placeholderText="Enter A Date"
+                    placeholderText="Select a Date"
                     selected={date}
                     dateFormat="dd/MM/yyyy"
                     onChange={date => setInputState({ ...inputState, date })}
@@ -106,7 +106,7 @@ function Form() {
                 <textarea 
                     name="description" 
                     value={description} 
-                    placeholder="Add A Reference" 
+                    placeholder="Add description" 
                     id="description" 
                     cols="50" 
                     rows="2" 

@@ -12,6 +12,8 @@ import ResponsiveAppBar from './Components/Navbar/Navbar';
 import { Route, Routes } from 'react-router-dom';
 import Home from './Components/Home/Home';
 import ExpenseForm from './Components/Expenses/ExpenseForm';
+import ProfileEdit from './pages/profile/profile';
+// import Profile from './pages/profile/profile';
 
 function App() {
   const [active, setActive] = useState(1)
@@ -46,6 +48,7 @@ function App() {
           <Route path="/" element={<Home/>}/>
           <Route path="/income" element={<Income/>}/>
           <Route path="/expense" element={<ExpenseForm/>}/>
+          <Route path="/profile" element={<ProfileEdit/>}/>
         </Routes>
       {/* <MainLayout>
         <main>

@@ -1,18 +1,17 @@
-import React, { useEffect } from 'react'
-import styled from 'styled-components'
+import React, { useEffect } from 'react';
+import styled from 'styled-components';
 import { useGlobalContext } from '../../context/globalContext';
 import { InnerLayout } from '../../styles/Layouts';
 import Form from '../Form/Form';
-import { Box } from '@mui/material';
 import Button from '../Button/Button';
 import { trash, settings } from '../../utils/Icons'; // Adjust imports as needed
 
 function Income() {
-    const { addIncome, incomes, getIncomes, deleteIncome, totalIncome } = useGlobalContext()
+    const { addIncome, incomes, getIncomes, deleteIncome, totalIncome } = useGlobalContext();
 
     useEffect(() => {
-        getIncomes()
-    }, [])
+        getIncomes();
+    }, [getIncomes]);
 
     const handleDelete = async (id) => {
         await deleteIncome(id);
@@ -77,7 +76,7 @@ function Income() {
                 </div>
             </InnerLayout>
         </IncomeStyled>
-    )
+    );
 }
 
 const IncomeStyled = styled.div`
@@ -127,7 +126,7 @@ const IncomeStyled = styled.div`
             border-radius: 10px;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
             border: 1px solid #d0d0d0;
-            max-height: 70vh;
+            max-height: 56vh;
         }
 
         .history-container {
@@ -137,8 +136,7 @@ const IncomeStyled = styled.div`
             border-radius: 10px;
             box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
             border: 1px solid #d0d0d0;
-            overflow-y: auto;
-            max-height: 70vh;
+            max-height: 56vh;
 
             h3 {
                 margin-bottom: 1rem;
@@ -151,13 +149,15 @@ const IncomeStyled = styled.div`
 `;
 
 const TableContainer = styled.div`
-    overflow-y: auto;
-    max-height: 60vh;
+    max-height: 40vh; /* Set fixed height for the table container */
+    overflow-y: auto; /* Enable vertical scroll if needed */
+    margin-top: 1rem;
 
     table {
         width: 100%;
         border-collapse: collapse;
-        table-layout: fixed;
+        table-layout: fixed; /* Ensure the table width is consistent */
+        overflow:scroll
     }
 
     thead {

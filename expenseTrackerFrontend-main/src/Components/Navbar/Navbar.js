@@ -43,6 +43,12 @@ function ResponsiveAppBar() {
         handleCloseNavMenu(); // Close the menu after selection
     };
 
+    const toProfile = (setting)=>{
+        if(setting == "Profile"){
+            router("/profile")
+        }
+    }
+
     return (
         <AppBar position="static" sx={{ backgroundColor: '#424242', backdropFilter: 'blur(4.5px)' }}>
             <Toolbar>
@@ -163,7 +169,7 @@ function ResponsiveAppBar() {
                     >
                         {['Profile', 'Logout'].map((setting) => (
                             <MenuItem key={setting} onClick={handleCloseUserMenu}>
-                                <Typography sx={{ color: 'black' }}>{setting}</Typography> 
+                                <Typography onClick={()=>toProfile(setting)} sx={{ color: 'black' }}>{setting}</Typography> 
                             </MenuItem>
                         ))}
                     </Menu>

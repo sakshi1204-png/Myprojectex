@@ -4,10 +4,8 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useGlobalContext } from '../../context/globalContext';
 import Button from '../Button/Button';
-import { plus, trash, settings } from '../../utils/Icons';  // Adjust imports as needed
-import { Box } from '@mui/material';
+import { plus, trash, settings } from '../../utils/Icons'; // Adjust imports as needed
 import { InnerLayout } from '../../styles/Layouts';
-
 
 function ExpenseForm() {
     const { addExpense, updateExpense, deleteExpense, error, setError, getExpenses, expenses } = useGlobalContext();
@@ -30,7 +28,7 @@ function ExpenseForm() {
             console.log(exp);
         }
         fetchExpenses();
-    }, []);
+    }, [getExpenses]);
 
     useEffect(() => {
         setHistory(expenses);
@@ -72,103 +70,97 @@ function ExpenseForm() {
         await getExpenses();
     };
 
-    // Function to calculate the total expense
     const totalExpense = () => {
         return history.reduce((total, expense) => total + parseFloat(expense.amount || 0), 0).toFixed(2);
     };
 
     return (
-        <ExpenseFormStyled>
+        <ExpenseStyled>
             <InnerLayout>
-                <Box sx={{ textAlign: 'center' }}>
-                    <h1>{editIndex !== null ? 'Edit Expense' : 'Add Expense'}</h1>
-                    <h2 className="total-expense">Total Expense: <span>${totalExpense()}</span></h2>
-                </Box>
-
-                <Box sx={{ display: 'flex', gap: '1.5rem', flexDirection: 'row' }}>
-                    <ExpenseFormContainer onSubmit={handleSubmit}>
-                        {error && <p className='error'>{error}</p>}
-                        <div className="input-control">
-                            {/* <label htmlFor="title">Title</label> */}
-                            <input
-                                type="text"
-                                value={title}
-                                name={'title'}
-                                id="title"
-                                placeholder="Expense Title"
-                                onChange={handleInput('title')}
-                            />
-                        </div>
-                        <div className="input-control">
-                            {/* <label htmlFor="amount">Amount</label> */}
-                            <input
-                                value={amount}
-                                type="text"
-                                name={'amount'}
-                                id="amount"
-                                placeholder={'Expense Amount'}
-                                onChange={handleInput('amount')}
-                            />
-                        </div>
-                        <div className="input-control">
-                            {/* <label htmlFor="date">Date</label> */}
-                            <DatePicker
-                                id='date'
-                                placeholderText='Select a Date'
-                                selected={date}
-                                dateFormat="dd/MM/yyyy"
-                                onChange={(date) => {
-                                    setInputState({ ...inputState, date: date });
-                                }}
-                            />
-                        </div>
-                        <div className="input-control">
-                            {/* <label htmlFor="category">Category</label> */}
-                            <select
-                                required
-                                value={category}
-                                name="category"
-                                id="category"
-                                onChange={handleInput('category')}
-                            >
-                                <option value="" disabled>Select Option</option>
-                                <option value="education">Education</option>
-                                <option value="groceries">Groceries</option>
-                                <option value="health">Health</option>
-                                <option value="subscriptions">Subscriptions</option>
-                                <option value="takeaways">Takeaways</option>
-                                <option value="clothing">Clothing</option>
-                                <option value="travelling">Travelling</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </div>
-                        <div className="input-control">
-                            {/* <label htmlFor="description">Description</label> */}
-                            <textarea
-                                name="description"
-                                value={description}
-                                id="description"
-                                placeholder='Add a description'
-                                cols="30"
-                                rows="4"
-                                onChange={handleInput('description')}
-                            ></textarea>
-                        </div>
-                        <div className="submit-btn">
-                            <Button
-                                name={editIndex !== null ? 'Update Expense' : 'Add Expense'}
-                                icon={plus}
-                                bPad={'.8rem 1.6rem'}
-                                bRad={'30px'}
-                                bg={'#007BFF'}
-                                color={'#fff'}
-                            />
-                        </div>
-                    </ExpenseFormContainer>
-
-                    <HistoryStyled>
+                <h1>{editIndex !== null ? 'Edit Expense' : 'Add Expense'}</h1>
+                <h2 className="total-expense">Total Expense: <span>${totalExpense()}</span></h2>
+                <div className="expense-content">
+                    <div className="form-container">
+                        <ExpenseFormContainer onSubmit={handleSubmit}>
+                            {error && <p className='error'>{error}</p>}
+                            <div className="input-control">
+                                <input
+                                    type="text"
+                                    value={title}
+                                    name={'title'}
+                                    id="title"
+                                    placeholder="Expense Title"
+                                    onChange={handleInput('title')}
+                                />
+                            </div>
+                            <div className="input-control">
+                                <input
+                                    value={amount}
+                                    type="number"
+                                    name={'amount'}
+                                    id="amount"
+                                    placeholder={'Expense Amount'}
+                                    onChange={handleInput('amount')}
+                                />
+                            </div>
+                            <div className='cont'>
+                                <div className="input-control">
+                                    <DatePicker
+                                        id='date'
+                                        placeholderText='Select a Date'
+                                        selected={date}
+                                        dateFormat="dd/MM/yyyy"
+                                        onChange={(date) => {
+                                            setInputState({ ...inputState, date: date });
+                                        }}
+                                    />
+                                </div>
+                                <div className="selects input-control">
+                                    <select
+                                        required
+                                        value={category}
+                                        name="category"
+                                        id="category"
+                                        onChange={handleInput('category')}
+                                    >
+                                        <option value="" disabled>Select Option</option>
+                                        <option value="education">Education</option>
+                                        <option value="groceries">Groceries</option>
+                                        <option value="health">Health</option>
+                                        <option value="subscriptions">Subscriptions</option>
+                                        <option value="takeaways">Takeaways</option>
+                                        <option value="clothing">Clothing</option>
+                                        <option value="travelling">Travelling</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div className="input-control">
+                                <textarea
+                                    name="description"
+                                    value={description}
+                                    id="description"
+                                    placeholder='Add description'
+                                    cols="50"
+                                    rows="2"
+                                    onChange={handleInput('description')}
+                                ></textarea>
+                            </div>
+                            <div className="submit-btn">
+                                <Button
+                                    name={editIndex !== null ? 'Update Expense' : 'Add Expense'}
+                                    icon={plus}
+                                    bPad=".8rem 1.3rem"
+                                    bRad="30px"
+                                    bg="var(--color-accent)"
+                                    color="#fff"
+                                />
+                            </div>
+                        </ExpenseFormContainer>
+                    </div>
+                    <div className="history-container">
                         <h3>Recent Expenses</h3>
-                        <div className="table-container">
+                        <TableContainer>
                             <table>
                                 <thead>
                                     <tr>
@@ -210,15 +202,17 @@ function ExpenseForm() {
                                     )}
                                 </tbody>
                             </table>
-                        </div>
-                    </HistoryStyled>
-                </Box>
+                        </TableContainer>
+                    </div>
+                </div>
             </InnerLayout>
-        </ExpenseFormStyled>
+        </ExpenseStyled>
     );
 }
 
-const ExpenseFormStyled = styled.div`
+const ExpenseStyled = styled.div`
+    display: flex;
+    flex-direction: column;
     padding: 2rem;
     background-color: #f5f6f7;
     min-height: 100vh;
@@ -247,22 +241,48 @@ const ExpenseFormStyled = styled.div`
         span {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #2ecc71;
+            color: #e74c3c; /* Color to match the expense theme */
+        }
+    }
+
+    .expense-content {
+        display: flex;
+        gap: 1.5rem;
+        flex-direction: row;
+
+        .form-container {
+            flex: 0.5;
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d0d0d0;
+            max-height: 57vh;
+        }
+
+        .history-container {
+            flex: 1;
+            background: #ffffff;
+            padding: 1.5rem;
+            border-radius: 10px;
+            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
+            border: 1px solid #d0d0d0;
+            max-height: 57vh;
+
+            h3 {
+                margin-bottom: 1rem;
+                font-size: 1.4rem;
+                font-weight: 600;
+                color: #333;
+            }
         }
     }
 `;
 
 const ExpenseFormContainer = styled.form`
-    background: #ffffff;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    border: 1px solid #d0d0d0;
-    max-width: 500px;
-    width: 100%;
     display: flex;
     flex-direction: column;
-    gap: 1rem;
+    gap: 2rem;
 
     .input-control {
         display: flex;
@@ -270,92 +290,85 @@ const ExpenseFormContainer = styled.form`
         gap: 0.5rem;
     }
 
-    label {
-        font-weight: 500;
-        color: #333;
-    }
-
     input, textarea, select {
-        padding: 0.7rem;
-        border: 1px solid #ddd;
+        font-family: inherit;
+        font-size: inherit;
+        outline: none;
+        border: none;
+        padding: .4rem 1rem;
         border-radius: 10px;
-        font-size: 1rem;
-        width: 100%;
-        box-sizing: border-box;
-    }
+        border: 2px solid #cccccc;
+        background: transparent;
+        resize: none;
+        box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);
+        color: rgba(34, 34, 96, 0.9);
 
-    textarea {
-        resize: vertical;
+        &::placeholder {
+            color: rgba(34, 34, 96, 0.4);
+        }
     }
 
     .submit-btn {
         display: flex;
-        justify-content: center;
-        margin-top: 1rem;
+        justify-content: left;
+        margin-top: 0.3rem;
+        
+
+            button {
+            box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);
+            &:hover {
+                background: var(--color-green) !important;
+            }
+        }
     }
 
-    .error {
-        color: red;
-        margin: 0.5rem 0;
+    .cont {
+        display: flex;
+        justify-content: space-between;
     }
 `;
 
-const HistoryStyled = styled.div`
-    background: #ffffff;
-    padding: 1.5rem;
-    border-radius: 10px;
-    box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-    border: 1px solid #d0d0d0;
-    max-width: 900px;
-    width: 100%;
-    height: 60vh;
-    display: flex;
-    flex-direction: column;
+const TableContainer = styled.div`
+    max-height: 40vh;
+    overflow-y: auto;
+    margin-top: 1rem;
 
-    h3 {
-        margin-bottom: 1rem;
-        font-size: 1.4rem;
-        font-weight: 600;
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        table-layout: fixed;
+    }
+
+    thead {
+        background: #f4f4f4;
+        color: #333;
+        font-weight: bold;
+    }
+
+    th, td {
+        padding: 1rem;
+        border: 1px solid #ddd;
+        text-align: center;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    th {
+        background: #e0e0e0;
         color: #333;
     }
 
-    .table-container {
-        overflow-y: auto;
-        flex: 1;
+    td {
+        text-align: center;
+    }
 
-        table {
-            width: 100%;
-            border-collapse: collapse;
-            table-layout: fixed;
-        }
+    tr:nth-child(even) {
+        background: #f9f9f9;
+    }
 
-        thead {
-            background: #f4f4f4;
-            color: #333;
-            font-weight: bold;
-        }
-
-        th, td {
-            padding: 1rem;
-            border: 1px solid #ddd;
-            text-align: center;
-            overflow: hidden;
-            text-overflow: ellipsis;
-            white-space: nowrap;
-        }
-
-        th {
-            background: #e0e0e0;
-            color: #333;
-        }
-
-        tr:nth-child(even) {
-            background: #f9f9f9;
-        }
-
-        tr:hover {
-            background: #f1f1f1;
-        }
+    tr:hover {
+        background: #f1f1f1;
     }
 `;
 
