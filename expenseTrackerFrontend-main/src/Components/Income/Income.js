@@ -149,7 +149,7 @@ const IncomeStyled = styled.div`
 `;
 
 const TableContainer = styled.div`
-    max-height: 40vh; /* Set fixed height for the table container */
+    max-height: 50vh; /* Set fixed height for the table container */
     overflow-y: auto; /* Enable vertical scroll if needed */
     margin-top: 1rem;
 

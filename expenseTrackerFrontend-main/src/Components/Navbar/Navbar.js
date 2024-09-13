@@ -46,6 +46,8 @@ function ResponsiveAppBar() {
     const toProfile = (setting)=>{
         if(setting == "Profile"){
             router("/profile")
+        }else if(setting == "Logout"){
+            router('/login')
         }
     }
 
@@ -115,7 +117,7 @@ function ResponsiveAppBar() {
                    
                         <IconButton
                         
-                            onClick={() =>router('/')}
+                            onClick={() =>router('/dashboard')}
                             sx={{ color: 'rgba(255, 255, 255, 0.6)' }}
                         >
                             

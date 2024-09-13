@@ -4,8 +4,12 @@ import DatePicker from 'react-datepicker';
 import "react-datepicker/dist/react-datepicker.css";
 import { useGlobalContext } from '../../context/globalContext';
 import Button from '../Button/Button';
-import { plus, trash, settings } from '../../utils/Icons'; // Adjust imports as needed
+import { plus, trash, settings } from '../../utils/Icons';
 import { InnerLayout } from '../../styles/Layouts';
+import Tooltip from '@mui/material/Tooltip';
+import IconButton from '@mui/material/IconButton';
+import EditIcon from '@mui/icons-material/Edit';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 function ExpenseForm() {
     const { addExpense, updateExpense, deleteExpense, error, setError, getExpenses, expenses } = useGlobalContext();
@@ -16,7 +20,6 @@ function ExpenseForm() {
         category: '',
         description: '',
     });
-
     const [history, setHistory] = useState([]);
     const [editIndex, setEditIndex] = useState(null);
 
@@ -42,10 +45,8 @@ function ExpenseForm() {
     const handleSubmit = async e => {
         e.preventDefault();
         if (editIndex !== null) {
-            // Update expense
-            await updateExpense(history[editIndex]._id, inputState); // Use the correct ID for update
+            await updateExpense(history[editIndex]._id, inputState);
         } else {
-            // Add expense
             await addExpense(inputState);
         }
         setInputState({
@@ -66,7 +67,7 @@ function ExpenseForm() {
     };
 
     const handleDelete = async (index) => {
-        await deleteExpense(history[index]._id); // Use the correct ID for delete
+        await deleteExpense(history[index]._id);
         await getExpenses();
     };
 
@@ -77,8 +78,7 @@ function ExpenseForm() {
     return (
         <ExpenseStyled>
             <InnerLayout>
-                <h1>{editIndex !== null ? 'Edit Expense' : 'Add Expense'}</h1>
-                <h2 className="total-expense">Total Expense: <span>${totalExpense()}</span></h2>
+                <h1>Expense Tracker</h1>
                 <div className="expense-content">
                     <div className="form-container">
                         <ExpenseFormContainer onSubmit={handleSubmit}>
@@ -158,6 +158,7 @@ function ExpenseForm() {
                             </div>
                         </ExpenseFormContainer>
                     </div>
+
                     <div className="history-container">
                         <h3>Recent Expenses</h3>
                         <TableContainer>
@@ -182,16 +183,16 @@ function ExpenseForm() {
                                                 <td>{expense.category}</td>
                                                 <td>{expense.description}</td>
                                                 <td>
-                                                    <Button
-                                                        name='Edit'
-                                                        icon={settings}
-                                                        onClick={() => handleEdit(index)}
-                                                    />
-                                                    <Button
-                                                        name='Delete'
-                                                        icon={trash}
-                                                        onClick={() => handleDelete(index)}
-                                                    />
+                                                    <Tooltip title="Edit Expense">
+                                                        <IconButton onClick={() => handleEdit(index)}>
+                                                            <EditIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
+                                                    <Tooltip title="Delete Expense">
+                                                        <IconButton onClick={() => handleDelete(index)}>
+                                                            <DeleteIcon />
+                                                        </IconButton>
+                                                    </Tooltip>
                                                 </td>
                                             </tr>
                                         ))
@@ -225,53 +226,32 @@ const ExpenseStyled = styled.div`
         font-weight: 600;
     }
 
-    .total-expense {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        background: #ffffff;
-        border: 1px solid #d0d0d0;
-        box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-        border-radius: 10px;
-        padding: 1rem;
-        margin: 1rem 0;
-        font-size: 1.8rem;
-        gap: 1rem;
-
-        span {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #e74c3c; /* Color to match the expense theme */
-        }
-    }
-
     .expense-content {
         display: flex;
-        gap: 1.5rem;
         flex-direction: row;
+        gap: 1.5rem;
+        justify-content: space-between;
 
         .form-container {
             flex: 0.5;
             background: #ffffff;
             padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #d0d0d0;
-            max-height: 57vh;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
         }
 
         .history-container {
             flex: 1;
             background: #ffffff;
             padding: 1.5rem;
-            border-radius: 10px;
-            box-shadow: 0px 4px 12px rgba(0, 0, 0, 0.1);
-            border: 1px solid #d0d0d0;
-            max-height: 57vh;
+            border-radius: 12px;
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1);
+            border: 1px solid #ddd;
 
             h3 {
                 margin-bottom: 1rem;
-                font-size: 1.4rem;
+                font-size: 1.6rem;
                 font-weight: 600;
                 color: #333;
             }
@@ -298,10 +278,15 @@ const ExpenseFormContainer = styled.form`
         padding: .4rem 1rem;
         border-radius: 10px;
         border: 2px solid #cccccc;
-        background: transparent;
-        resize: none;
-        box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);
-        color: rgba(34, 34, 96, 0.9);
+        background: #f9f9f9;
+        box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.05);
+        color: #222;
+        transition: all 0.3s ease;
+
+        &:hover, &:focus {
+            border-color: #3498db;
+            background-color: #f4faff;
+        }
 
         &::placeholder {
             color: rgba(34, 34, 96, 0.4);
@@ -310,12 +295,11 @@ const ExpenseFormContainer = styled.form`
 
     .submit-btn {
         display: flex;
-        justify-content: left;
+        justify-content: flex-start;
         margin-top: 0.3rem;
-        
 
-            button {
-            box-shadow: 0px 1px 15px rgba(0, 0, 0, 0.06);
+        button {
+            box-shadow: 0px 1px 10px rgba(0, 0, 0, 0.05);
             &:hover {
                 background: var(--color-green) !important;
             }
@@ -325,50 +309,41 @@ const ExpenseFormContainer = styled.form`
     .cont {
         display: flex;
         justify-content: space-between;
+        gap: 1rem;
+    }
+
+    .error {
+        color: red;
+        font-size: 0.9rem;
+        margin-bottom: 0.5rem;
     }
 `;
 
 const TableContainer = styled.div`
-    max-height: 40vh;
-    overflow-y: auto;
-    margin-top: 1rem;
-
     table {
         width: 100%;
         border-collapse: collapse;
-        table-layout: fixed;
-    }
+        margin-top: 1rem;
 
-    thead {
-        background: #f4f4f4;
-        color: #333;
-        font-weight: bold;
-    }
+        th, td {
+            padding: 0.8rem;
+            text-align: left;
+        }
 
-    th, td {
-        padding: 1rem;
-        border: 1px solid #ddd;
-        text-align: center;
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-    }
+        th {
+            background-color: #f0f2f5;
+            color: #333;
+            font-weight: 600;
+        }
 
-    th {
-        background: #e0e0e0;
-        color: #333;
-    }
+        td {
+            background-color: #ffffff;
+            border-bottom: 1px solid #ddd;
+        }
 
-    td {
-        text-align: center;
-    }
-
-    tr:nth-child(even) {
-        background: #f9f9f9;
-    }
-
-    tr:hover {
-        background: #f1f1f1;
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
     }
 `;
 

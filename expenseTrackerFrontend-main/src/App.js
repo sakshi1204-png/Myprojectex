@@ -3,16 +3,18 @@ import styled from "styled-components";
 import bg from './img/bg.png'
 import {MainLayout} from './styles/Layouts'
 import Orb from './Components/Orb/Orb'
-import Navigation from './Components/Navigation/Navigation'
+// import Navigation from './Components/Navigation/Navigation'
 import Dashboard from './Components/Dashboard/Dashboard';
 import Income from './Components/Income/Income'
 import Expenses from './Components/Expenses/Expenses';
 import { useGlobalContext } from './context/globalContext';
 import ResponsiveAppBar from './Components/Navbar/Navbar';
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes, Navigate } from 'react-router-dom';
 import Home from './Components/Home/Home';
 import ExpenseForm from './Components/Expenses/ExpenseForm';
 import ProfileEdit from './pages/profile/profile';
+import LoginPage from './pages/login/login';
+import RegistrationPage from './pages/registration/registration';
 // import Profile from './pages/profile/profile';
 
 function App() {
@@ -45,10 +47,13 @@ function App() {
       {orbMemo}
         <ResponsiveAppBar/>
         <Routes>
-          <Route path="/" element={<Home/>}/>
-          <Route path="/income" element={<Income/>}/>
-          <Route path="/expense" element={<ExpenseForm/>}/>
-          <Route path="/profile" element={<ProfileEdit/>}/>
+        <Route path="/" element={<Navigate to="/login" />} /> {/* Redirect to login page */}
+            <Route path="/login" element={<LoginPage />} /> {/* Login page route */}
+            <Route path="/dashboard" element={<Dashboard />} />
+            <Route path="/income" element={<Income />} />
+            <Route path="/register" element={<RegistrationPage/>} />
+            <Route path="/expense" element={<ExpenseForm />} />
+            <Route path="/profile" element={<ProfileEdit />} />
         </Routes>
       {/* <MainLayout>
         <main>
